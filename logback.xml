@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Propiedades generales-->
+    <property name="LOGS" value="./src/main/resources/logs"/>
+    <!-- Configuracion de los logs por consola -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+               %highlight(%d{ISO8601}) %highlight(%-5level) [%cyan(%t)] %magenta(%C{1.}): %msg%n%throwable
+                <!-- %date{ISO08601} %-5level %class{0} - [%X] %msg%n -->
+            </pattern>
+        </layout>
+    </appender>
+    <!-- Configuracion de los logs para el archivo -->
+    <appender name="ErrorFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">E
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                %d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} -[%X] %msg%n }
+               <!--  %date{ISO08601} %-5level %class{0} - [%X] %msg%n -->
+            </pattern>
+        </encoder>
+        <append>true</append>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${LOGS}/spring-boot-logger-%d{yyy-mm-dd}.%i.log
+            </fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <maxFileSize>5mb</maxFileSize>
+
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+    </appender>
+    <!-- Establecer el nivel para los Logs configurados -->
+    <root name="BS5Logging" level="warn" additivity="true">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="ErrorFile"/>
+    </root>
+
+
+</configuration>
